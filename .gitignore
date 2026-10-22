@@ -1,0 +1,13 @@
+# Dependencies
+/.idea
+node_modules/
+
+# Secrets and Local Configs
+.env
+config.json
+
+# Ignore all TypeScript source files
+*.ts
+
+# Ensure JavaScript files are tracked (optional reminder, Git tracks them by default)
+!*.js
