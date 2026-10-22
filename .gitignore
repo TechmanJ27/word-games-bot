@@ -1,10 +1,13 @@
 # Dependencies
-/.idea
 node_modules/
 
 # Secrets and Local Configs
 .env
 config.json
+/.idea
+
+# Stored Data
+database.db
 
 # Ignore all TypeScript source files
 *.ts

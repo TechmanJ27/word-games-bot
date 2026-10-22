@@ -47,4 +47,10 @@ for (const file of eventFiles) {
     }
 }
 client.login(process.env.TOKEN);
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception thrown:', err);
+});
 //# sourceMappingURL=index.js.map
