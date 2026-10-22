@@ -1,4 +1,4 @@
-import { Events, MessageFlags, Collection } from "discord.js";
+import { Collection, Events, MessageFlags } from "discord.js";
 export default {
     name: Events.InteractionCreate,
     async execute(interaction) {
