@@ -1,4 +1,4 @@
-import { initializeConfigTables } from "../database.js";
+import { initializeConfigTables, initializeGameTables } from "../database.js";
 import { Events } from "discord.js";
 export default {
     name: Events.GuildCreate,
@@ -6,6 +6,8 @@ export default {
         console.log(`Added to new guild  with name ${guild.name} and id ${guild.id}`);
         initializeConfigTables(guild.id);
         console.log(`Initialized config for guild with name ${guild.name} and id ${guild.id}`);
+        initializeGameTables(guild.id);
+        console.log(`Initialized game data for guild with name ${guild.name} and id ${guild.id}`);
     },
 };
 //# sourceMappingURL=guildCreate.js.map

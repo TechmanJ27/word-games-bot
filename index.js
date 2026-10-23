@@ -3,7 +3,6 @@ import path from 'node:path';
 import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
 import 'dotenv/config';
 import { fileURLToPath } from 'node:url';
-import { createTables } from "./database.js";
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent], partials: [Partials.Channel, Partials.Message] });
 client.commands = new Collection();
 client.cooldowns = new Collection();
@@ -47,7 +46,6 @@ for (const file of eventFiles) {
         client.on(event.name, (...args) => event.execute(...args));
     }
 }
-createTables();
 client.login(process.env.TOKEN);
 process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
