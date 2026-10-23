@@ -1,0 +1,1 @@
+{"version":3,"file":"gameClass.js","sourceRoot":"","sources":["gameClass.ts"],"names":[],"mappings":"AAEA,MAAM,CAAC,OAAO,OAAO,OAAO;IAC1B,YAAY,IAAU;QACpB,OAAM,CACJ;YACE,QAAQ,EAAE;gBACN,IAAI,EAAE,IAAI;gBACV,SAAS,EAAE,IAAI,IAAI,EAAE;aACxB;SACF,CAAC,CAAC;IACP,CAAC;CACF"}
