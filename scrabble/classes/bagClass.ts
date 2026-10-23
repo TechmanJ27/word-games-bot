@@ -9,8 +9,13 @@ export default class ScrabbleBag () {
 
 function getFile(lang) {
   const tilesetFile = path.join(meta.import.dirname, /tilesets/ + lang + '.json');
-  fs.readFile(tilesetFile, (callback) => {
-     return JSON.parse();
+  const data: Object;
+  fs.readFile(tilesetFile, 'utf8', (err, data) => {
+    if (err) {
+      console.log(err)
+      return;
+    }
+    return JSON.parse(data);
   });
   
 }
