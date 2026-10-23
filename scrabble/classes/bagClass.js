@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+
 export default class ScrabbleBag () {
   constructor(lang) {
     return getFile(lang).letters;
@@ -6,5 +8,8 @@ export default class ScrabbleBag () {
 
 function getFile(lang) {
   const tilesetFile = path.join(meta.import.dirname, /tilesets/ + lang + '.json');
-  return JSON.parse(readSync(tilesetFile));
+  fs.readFile(tilesetFile, (callback) => {
+     return JSON.parse();
+  });
+  
 }
