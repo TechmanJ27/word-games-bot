@@ -5,6 +5,6 @@ export default class ScrabbleBag () {
 }
 
 function getFile(lang) {
-  const tilesetFile = path.join(meta.import.dirname, lang + '.tileset.json');
+  const tilesetFile = path.join(meta.import.dirname, /tilesets/ + lang + '.json');
   return JSON.parse(readSync(tilesetFile));
 }
