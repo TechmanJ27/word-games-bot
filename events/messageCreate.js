@@ -1,7 +1,6 @@
 import { Colors, EmbedBuilder, Events } from 'discord.js';
 import { getWordChainChannel, getLastCachedWordChainLetter, checkIfValidWordWordChain, resetWordChainGame, addWordToChain, updateCountWordChain, updateLastCachedWordChainLetter, getWordChainCount, initializeGameTables, getLastCachedWordChainUser, updateLastCachedWordChainUser, getWordChainDelete } from '../database.js';
-const checkWord = require('check-word');
-const words = checkWord('en');
+import isValidWord from "../wordValidation.js";
 function getWordCount(str) {
     if (!str || str.trim() === '')
         return 0;
@@ -40,7 +39,7 @@ export default {
         const lastUser = getLastCachedWordChainUser(message.guildId);
         if (message.author.id === lastUser)
             resolveDelete(message);
-        if (!words.check(message.content))
+        if (!isValidWord(message.content))
             resolveDelete(message);
         const failEmbed = new EmbedBuilder()
             .setTitle(`<@${message.author.id}> triggered a game reset`)

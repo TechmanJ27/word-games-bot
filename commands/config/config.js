@@ -20,7 +20,13 @@ export default {
         .addChannelOption(option => option
         .setName('channel')
         .setDescription('The channel to use for the game')
-        .setRequired(true)))),
+        .setRequired(true)))
+        .addSubcommand(subcommand => subcommand
+        .setName('word-chain')
+        .setDescription('Adjust word chain settings')
+        .addBooleanOption(option => option
+        .setName('delete')
+        .setDescription('Toggle deletion of unrelated messages')))),
     async execute(interaction) {
         await interaction.deferReply({ ephemeral: true });
         const subcommandGroup = interaction.options.getSubcommandGroup();
@@ -34,7 +40,9 @@ export default {
             }
         }
         if (subcommandGroup === 'server' && subcommand === 'word-chain') {
-            const newState = interaction.options.getBoolean('delete', true);
+            const newState = interaction.options.getBoolean('delete');
+            if (!newState)
+                return;
             setWordChainDelete(interaction.guildId, newState);
         }
         await interaction.editReply({ content: 'Config updated.' });
