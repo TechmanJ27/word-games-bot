@@ -1,5 +1,5 @@
 import { PermissionFlagsBits, SlashCommandBuilder, InteractionContextType } from 'discord.js';
-import { setWordChainChannel } from '../../database.js';
+import { setWordChainChannel, setWordChainDelete } from '../../database.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('config')
@@ -25,13 +25,17 @@ export default {
         await interaction.deferReply({ ephemeral: true });
         const subcommandGroup = interaction.options.getSubcommandGroup();
         const subcommand = interaction.options.getSubcommand();
-        const game = interaction.options.getString('game', true);
-        const channel = interaction.options.getChannel('channel', true);
         if (subcommandGroup === 'server' && subcommand === 'game-channel') {
+            const game = interaction.options.getString('game', true);
+            const channel = interaction.options.getChannel('channel', true);
             if (game === 'word_chain') {
                 setWordChainChannel(interaction.guildId, channel.id);
                 return interaction.editReply({ content: `Word Chain channel has been set to ${channel}.` });
             }
+        }
+        if (subcommandGroup === 'server' && subcommand === 'word-chain') {
+            const newState = interaction.options.getBoolean('delete', true);
+            setWordChainDelete(interaction.guildId, newState);
         }
         await interaction.editReply({ content: 'Config updated.' });
     }

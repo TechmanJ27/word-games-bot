@@ -83,7 +83,7 @@ export function setWordChainChannel(guildId, channelId) {
     stmtSetWordChainChannel.run(guildId, channelId);
 }
 export function getWordChainDelete(guildId) {
-    const row = stmtGetWordChainChannel.get(guildId);
+    const row = stmtGetWordChainDelete.get(guildId);
     if (row) {
         let boolState = false;
         const state = row.word_chain_delete;
@@ -99,7 +99,7 @@ export function setWordChainDelete(guildId, toggle) {
     let toggleNum = 0;
     if (toggle)
         toggleNum++;
-    stmtSetWordChainChannel.run(guildId, toggleNum);
+    stmtSetWordChainDelete.run(guildId, toggleNum);
 }
 export function getLastCachedWordChainLetter(guildId) {
     const row = stmtGetLastWordChainLetter.get(guildId);

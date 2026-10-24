@@ -23,5 +23,12 @@ db.exec(`
         PRIMARY KEY (guild_id, word),
         FOREIGN KEY (guild_id) REFERENCES wordChainCache(guild_id) ON DELETE CASCADE
     );
+
+    CREATE TABLE IF NOT EXISTS wordChainWord (
+        guild_id TEXT NOT NULL,
+        word TEXT NOT NULL,
+        PRIMARY KEY (guild_id, word),
+        FOREIGN KEY (guild_id) REFERENCES wordChainCache(guild_id) ON DELETE CASCADE
+    );
 `);
 //# sourceMappingURL=createTables.js.map

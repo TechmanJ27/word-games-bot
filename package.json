@@ -13,6 +13,7 @@
     "check-word": "^1.1.0",
     "discord.js": "^14.27.0",
     "dotenv": "^18.0.8",
+    "is-word": "^1.0.4",
     "sqlite3": "^6.0.1",
     "typescript": "^7.0.2"
   }
