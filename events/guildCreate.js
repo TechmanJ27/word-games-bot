@@ -1,4 +1,4 @@
-import { initializeConfigTables, initializeGameTables } from "../database.js";
+import { initializeConfigTables, initializeGameTables } from "../sqlite/wordChainDatabase.js";
 import { Events } from "discord.js";
 export default {
     name: Events.GuildCreate,

@@ -1,5 +1,5 @@
 import { Colors, EmbedBuilder, Events } from 'discord.js';
-import { getWordChainChannel, getLastCachedWordChainLetter, checkIfValidWordWordChain, resetWordChainGame, addWordToChain, updateCountWordChain, updateLastCachedWordChainLetter, getWordChainCount, initializeGameTables, getLastCachedWordChainUser, updateLastCachedWordChainUser, getWordChainDelete } from '../database.js';
+import { getWordChainChannel, getLastCachedWordChainLetter, checkIfValidWordWordChain, resetWordChainGame, addWordToChain, updateCountWordChain, updateLastCachedWordChainLetter, getWordChainCount, initializeGameTables, getLastCachedWordChainUser, updateLastCachedWordChainUser, getWordChainDelete } from '../sqlite/wordChainDatabase.js';
 import isValidWord from "../wordValidation.js";
 function getWordCount(str) {
     if (!str || str.trim() === '')
@@ -14,10 +14,7 @@ function getLastLetter(content) {
 }
 function resolveDelete(message) {
     if (getWordChainDelete(message.guildId)) {
-        return message.delete();
-    }
-    else {
-        return;
+        return message.delete().catch(() => { });
     }
 }
 export default {
@@ -29,22 +26,31 @@ export default {
             return;
         if (message.author.bot)
             return;
-        if (getWordCount(message.content) !== 1)
-            resolveDelete(message);
-        if (message.content.length <= 3)
-            resolveDelete(message);
-        initializeGameTables(message.guildId);
-        const lastCached = getLastCachedWordChainLetter(message.guildId);
         const currentWord = message.content.toLowerCase().trim();
+        if (getWordCount(message.content) !== 1)
+            return resolveDelete(message);
+        if (currentWord.length <= 3)
+            return resolveDelete(message);
+        if (!isValidWord(message.content, "en"))
+            return resolveDelete(message);
+        initializeGameTables(message.guildId);
+        const wordCount = getWordChainCount(message.guildId);
         const lastUser = getLastCachedWordChainUser(message.guildId);
-        if (message.author.id === lastUser)
-            resolveDelete(message);
-        if (!isValidWord(message.content))
-            resolveDelete(message);
+        if (wordCount > 0 && message.author.id === lastUser) {
+            return resolveDelete(message);
+        }
         const failEmbed = new EmbedBuilder()
-            .setTitle(`<@${message.author.id}> triggered a game reset`)
+            .setTitle(`${message.author.displayName} (${message.author.username}) triggered a game reset`)
             .setColor(Colors.Red);
-        if (!getWordChainCount(message.guildId)) {
+        const handleGameReset = async (descriptionText) => {
+            await message.react('❌');
+            failEmbed.setDescription(descriptionText);
+            await message.channel.send({ embeds: [failEmbed] });
+            resetWordChainGame(message.guildId);
+            updateLastCachedWordChainLetter(message.guildId, '');
+            updateLastCachedWordChainUser(message.guildId, '');
+        };
+        if (!wordCount || wordCount === 0) {
             await message.react('✅');
             addWordToChain(message.guildId, currentWord);
             updateCountWordChain(message.guildId);
@@ -52,18 +58,15 @@ export default {
             updateLastCachedWordChainUser(message.guildId, message.author.id);
             return;
         }
+        const lastCached = getLastCachedWordChainLetter(message.guildId);
         if (lastCached && getFirstLetter(currentWord) !== lastCached.toLowerCase()) {
-            await message.react('❌');
-            failEmbed.setDescription(`The next letter was: ${lastCached.toUpperCase()}\nYour word started with: ${getFirstLetter(currentWord).toUpperCase()}\n${getWordChainCount(message.guildId)} words were said during this round`);
-            await message.channel.send({ embeds: [failEmbed] });
-            resetWordChainGame(message.guildId);
+            const desc = `The next letter was: ${lastCached.toUpperCase()}\nYour word started with: ${getFirstLetter(currentWord).toUpperCase()}\n${wordCount} words were said during this round`;
+            await handleGameReset(desc);
             return;
         }
         if (checkIfValidWordWordChain(message.guildId, currentWord)) {
-            await message.react('❌');
-            failEmbed.setDescription(`The word "${message.content}" was already used during this round\n${getWordChainCount(message.guildId)} words were said during this round`);
-            await message.channel.send({ embeds: [failEmbed] });
-            resetWordChainGame(message.guildId);
+            const desc = `The word "${message.content}" was already used during this round\n${wordCount} words were said during this round`;
+            await handleGameReset(desc);
             return;
         }
         await message.react('✅');

@@ -1,6 +1,6 @@
 import { DatabaseSync } from 'node:sqlite';
 import path from 'node:path';
-const db = new DatabaseSync(path.join(import.meta.dirname, 'database.db'));
+const db = new DatabaseSync(path.join(import.meta.dirname, '..', 'database.db'));
 db.exec('PRAGMA foreign_keys = ON;');
 const stmtInitializeConfig = db.prepare(`
     INSERT INTO wordChainConfig (guild_id) VALUES (?) ON CONFLICT(guild_id) DO NOTHING;
@@ -136,4 +136,4 @@ export function resetWordChainGame(guildId) {
         db.prepare('DELETE FROM wordChainWord WHERE guild_id = ?').run(guildId);
     });
 }
-//# sourceMappingURL=database.js.map
+//# sourceMappingURL=wordChainDatabase.js.map
